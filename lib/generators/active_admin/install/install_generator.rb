@@ -5,6 +5,7 @@ module ActiveAdmin
     class InstallGenerator < ActiveRecord::Generators::Base
       desc "Installs Active Admin and generates the necessary migrations"
       argument :name, :type => :string, :default => "AdminUser"
+	  class_option  :folder, :type => :string, :default => 'admin'
 
       hook_for :users, :default => "devise", :desc => "Admin user generator to run. Skip with --skip-users"
 
@@ -12,17 +13,17 @@ module ActiveAdmin
         @_active_admin_source_root ||= File.expand_path("../templates", __FILE__)
       end
 
-			def copy_initializer
+	  def copy_initializer
         @underscored_user_name = name.underscore
         template 'active_admin.rb.erb', 'config/initializers/active_admin.rb'
       end
 
       def setup_directory
-        empty_directory "app/admin"
-        template 'dashboard.rb', 'app/admin/dashboard.rb'
+        empty_directory "app/#{options.folder}"
+        template 'dashboard.rb', "app/#{options.folder}/dashboard.rb"
         if options[:users].present?
           @user_class = name
-          template 'admin_user.rb.erb', "app/admin/#{name.underscore}.rb"
+          template 'admin_user.rb.erb', "app/#{options.folder}/#{name.underscore}.rb"
         end
       end
 

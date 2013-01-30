@@ -7,6 +7,11 @@ ActiveAdmin.setup do |config|
   #
   config.site_title = "<%= Rails.application.class.name.split("::").first.titlecase %>"
 
+  # Set the load paths for rails so that it sees our admin directory
+
+  config.load_paths ||= []
+  config.load_paths << File.join(Rails.root, 'app', "<%= options[:folder] %>")
+
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
   #
@@ -36,6 +41,8 @@ ActiveAdmin.setup do |config|
   # Default:
   # config.default_namespace = :admin
   #
+  config.default_namespace = :<%= options[:folder].parameterize.underscore.to_sym %>
+
   # You can customize the settings for each namespace by using
   # a namespace block. For example, to change the site title
   # within a namespace:
